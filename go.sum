@@ -1,7 +1,9 @@
 dario.cat/mergo v1.0.0 h1:AGCNq9Evsj31mOgNPcLyXc+4PNABt905YmuqPYYpBWk=
 dario.cat/mergo v1.0.0/go.mod h1:uNxQE+84aUszobStD9th8a29P2fMDhsBdgRYvZOxGmk=
-github.com/HankLin216/go-utils v0.0.0-20241103084940-9415ea6c9e5d h1:CJlE19dug/O9AwWC4Uw5zIrWapB7Pe7xMvcfGYF5xtE=
-github.com/HankLin216/go-utils v0.0.0-20241103084940-9415ea6c9e5d/go.mod h1:dKq/aUAUGa/9oVHj8btD+w0BbXJtQe7D9vGviqIKWbU=
+github.com/HankLin216/go-utils v0.0.2 h1:QNK3Aj7p+CYZ2DXkijJF8rBR+nrUMm50QdHUFxhH7Mw=
+github.com/HankLin216/go-utils v0.0.2/go.mod h1:dKq/aUAUGa/9oVHj8btD+w0BbXJtQe7D9vGviqIKWbU=
+github.com/HankLin216/go-utils v0.0.3 h1:bM7aZxyxt56QqmAlSaTygnqoR6gW+SQMxzRZ5wlAlAo=
+github.com/HankLin216/go-utils v0.0.3/go.mod h1:dKq/aUAUGa/9oVHj8btD+w0BbXJtQe7D9vGviqIKWbU=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fsnotify/fsnotify v1.8.0 h1:dAwr6QBTBZIkG8roQaJjGof0pp0EeF+tNV7YBP3F/8M=
