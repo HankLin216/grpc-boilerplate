@@ -3,27 +3,23 @@ package main
 import (
 	"github.com/HankLin216/go-utils/config"
 	"github.com/HankLin216/go-utils/config/file"
-	"go.uber.org/zap"
+	"github.com/HankLin216/grpc-boilerplate/internal/conf"
 )
 
 func main() {
-
-	conf := config.New(
+	c := config.New(
 		config.WithSource(
-			file.NewSource(flagconf),
+			file.NewSource("../../configs"),
 		),
 	)
+	defer c.Close()
 
-	logger, err := zap.NewDevelopment()
-	if err != nil {
+	if err := c.Load(); err != nil {
 		panic(err)
 	}
-	logger.Debug("this is debug message")
-	logger.Info("this is info message")
-	logger.Info("this is info message with fileds",
-		zap.Int("age", 37),
-		zap.String("agender", "man"),
-	)
-	logger.Warn("this is warn message")
-	logger.Error("this is error message")
+
+	var bc conf.Bootstrap
+	if err := c.Scan(&bc); err != nil {
+		panic(err)
+	}
 }
