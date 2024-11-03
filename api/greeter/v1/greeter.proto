@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package greeter.v1;
 
-option go_package = "github.com/HankLin216/grpc-boilerplate/api/greeter/v1;v1";
+option go_package = "grpc-boilerplate/api/greeter/v1;v1";
 
 service Greeter {
   rpc SayHello (HelloRequest) returns (HelloResponse) {}
