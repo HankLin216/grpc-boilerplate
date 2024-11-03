@@ -9,11 +9,26 @@
       "problemMatcher": []
     },
     {
-      "label": "Generate Proto Files (win)",
+      "label": "Generate API Proto Files (win)",
       "type": "shell",
       "command": "./utils/generate_proto.bat",
       "args": ["${workspaceFolder}\\api"],
       "problemMatcher": []
+    },
+    {
+      "label": "Generate Proto Files (win)",
+      "type": "shell",
+      "command": "./utils/generate_proto.bat",
+      "args": ["${input:protoDirectory}"],
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "protoDirectory",
+      "type": "promptString",
+      "description": "Enter the directory for proto files",
+      "default": "${workspaceFolder}\\api"
     }
   ]
 }
