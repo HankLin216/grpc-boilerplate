@@ -21,6 +21,20 @@
       "command": "./utils/generate_proto.bat",
       "args": ["${input:protoDirectory}"],
       "problemMatcher": []
+    },
+    {
+      "label": "Build Production (win)",
+      "type": "shell",
+      "command": "go",
+      "problemMatcher": ["$go"],
+      "args": [
+        "build",
+        "-o",
+        "bin\\app.exe",
+        "-ldflags",
+        "-s -w -X main.Version=1.0.0 -X main.ConfFolderPath=./config.yaml",
+        "${workspaceFolder}\\cmd\\server"
+      ]
     }
   ],
   "inputs": [
