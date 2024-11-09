@@ -32,7 +32,7 @@
         "-o",
         "bin\\app.exe",
         "-ldflags",
-        "-s -w -X main.Version=1.0.0 -X main.ConfFolderPath=./config.yaml",
+        "-s -w -X main.Version=1.0.0 -X main.Env=Production -X main.ConfFolderPath=./config.yaml",
         "${workspaceFolder}\\cmd\\server"
       ]
     },
