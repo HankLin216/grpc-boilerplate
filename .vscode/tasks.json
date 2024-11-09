@@ -35,6 +35,13 @@
         "-s -w -X main.Version=1.0.0 -X main.ConfFolderPath=./config.yaml",
         "${workspaceFolder}\\cmd\\server"
       ]
+    },
+    {
+      "label": "Generate Wire",
+      "type": "shell",
+      "command": "go",
+      "problemMatcher": ["$go"],
+      "args": ["generate", "./..."]
     }
   ],
   "inputs": [

@@ -2,11 +2,15 @@ package main
 
 import (
 	"flag"
+	"os"
 	"time"
 
 	"github.com/HankLin216/go-utils/config"
 	"github.com/HankLin216/go-utils/config/file"
+	"github.com/HankLin216/go-utils/log"
 	"github.com/HankLin216/grpc-boilerplate/internal/conf"
+	app "github.com/HankLin216/grpc-boilerplate/pkg/app"
+	"github.com/HankLin216/grpc-boilerplate/pkg/transport/grpc"
 	"go.uber.org/zap"
 )
 
@@ -16,12 +20,27 @@ var (
 	Env            = "Development"
 	ConfFolderPath = "../../configs"
 	BuildTime      = time.Now().Format(time.RFC3339)
+
+	id, _ = os.Hostname()
 )
 
 func init() {
 	flag.StringVar(&Version, "version", Version, "input the service version")
 	flag.StringVar(&Env, "env", Env, "input the environment")
 	flag.StringVar(&ConfFolderPath, "ConfFolderPath", ConfFolderPath, "input the config path")
+}
+
+func newApp(gs *grpc.Server, logger *zap.Logger) *app.App {
+	return app.New(
+		app.ID(id),
+		app.Name(Name),
+		app.Version(Version),
+		app.Metadata(map[string]string{}),
+		app.Logger(logger),
+		app.Server(
+			gs,
+		),
+	)
 }
 
 func main() {
@@ -31,10 +50,10 @@ func main() {
 	// logger
 	var logger *zap.Logger
 	var err error
-	if Env == "Production" {
-		logger, err = zap.NewProduction()
-	} else {
+	if Env == "Development" {
 		logger, err = zap.NewDevelopment()
+	} else {
+		logger, err = zap.NewProduction()
 	}
 	if err != nil {
 		panic(err)
@@ -48,9 +67,11 @@ func main() {
 		zap.String("BuildTime", BuildTime),
 	)
 
+	// update global logger
+	log.SetLogger(logger)
+
 	// config
 	c := config.New(
-		logger,
 		config.WithSource(
 			file.NewSource(ConfFolderPath),
 		),
@@ -63,6 +84,17 @@ func main() {
 
 	var bc conf.Bootstrap
 	if err := c.Scan(&bc); err != nil {
+		panic(err)
+	}
+
+	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
+	if err != nil {
+		panic(err)
+	}
+	defer cleanup()
+
+	// start and wait for stop signal
+	if err := app.Run(); err != nil {
 		panic(err)
 	}
 }

@@ -3,7 +3,10 @@ module github.com/HankLin216/grpc-boilerplate
 go 1.23.2
 
 require (
-	github.com/HankLin216/go-utils v0.0.3
+	github.com/HankLin216/go-utils v0.0.5
+	github.com/google/uuid v1.6.0
+	github.com/google/wire v0.6.0
+	golang.org/x/sync v0.8.0
 	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.35.1
 )
