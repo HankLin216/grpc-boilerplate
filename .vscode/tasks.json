@@ -23,17 +23,14 @@
       "problemMatcher": []
     },
     {
-      "label": "Build Production (win)",
+      "label": "Build (win)",
       "type": "shell",
-      "command": "go",
-      "problemMatcher": ["$go"],
+      "command": "./utils/build.bat",
+      "problemMatcher": [],
       "args": [
-        "build",
-        "-o",
-        "bin\\app.exe",
-        "-ldflags",
-        "-s -w -X main.Version=1.0.0 -X main.Env=Production -X main.ConfFolderPath=./config.yaml",
-        "${workspaceFolder}\\cmd\\server"
+        "./config.yaml",
+        "${input:buildTarget}",
+        "${workspaceFolder}/bin/app.exe"
       ]
     },
     {
@@ -50,6 +47,13 @@
       "type": "promptString",
       "description": "Enter the directory for proto files",
       "default": "${workspaceFolder}\\api"
+    },
+    {
+      "id": "buildTarget",
+      "type": "pickString",
+      "options": ["Production", "Beta", "Development"],
+      "description": "Select the build target",
+      "default": "Production"
     }
   ]
 }
