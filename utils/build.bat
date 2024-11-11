@@ -13,7 +13,7 @@ set ENVIRONMENT=%~2
 set OUTPUT_FILE=%~3
 
 REM Get the latest git tag
-for /f "delims=" %%i in ('git describe --tags') do set GIT_TAG=%%i
+for /f "delims=" %%i in ('git describe --tags --always') do set GIT_TAG=%%i
 
 REM Check if GIT_TAG is empty or contains an error message
 if "%GIT_TAG%"=="" (
