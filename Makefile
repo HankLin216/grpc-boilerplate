@@ -1,5 +1,3 @@
-GOHOSTOS:=$(shell go env GOHOSTOS)
-GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 API_PROTO_FILES=$(shell find api -name "*.proto" -print0 | xargs -0 echo)
 CONF_PROTO_FILES=$(shell find internal/conf -name "*.proto" -print0 | xargs -0 echo)
