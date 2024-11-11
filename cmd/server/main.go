@@ -25,8 +25,8 @@ var (
 )
 
 func init() {
-	flag.StringVar(&Version, "version", Version, "input the service version")
-	flag.StringVar(&Env, "env", Env, "input the environment")
+	flag.StringVar(&Version, "Version", Version, "input the service version")
+	flag.StringVar(&Env, "Env", Env, "input the environment")
 	flag.StringVar(&ConfFolderPath, "ConfFolderPath", ConfFolderPath, "input the config path")
 }
 
