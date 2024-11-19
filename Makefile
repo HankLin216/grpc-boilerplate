@@ -3,6 +3,11 @@ API_PROTO_FILES=$(shell find api -name "*.proto" -print0 | xargs -0 echo)
 CONF_PROTO_FILES=$(shell find internal/conf -name "*.proto" -print0 | xargs -0 echo)
 YMAL_CONF_PATH=./config.yaml
 
+.PHONY: copy-config
+# copy config
+copy-config:
+	cp ./configs/* ./bin/
+
 .PHONY: api
 # generate api proto
 api:
@@ -36,7 +41,7 @@ dev-build:
 
 .PHONY: all
 # generate all
-all: api config generate prd-build
+all: api config generate prd-build copy-config
 	
 .PHONY: help
 # show help
