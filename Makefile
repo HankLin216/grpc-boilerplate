@@ -31,12 +31,12 @@ generate:
 
 .PHONY: prd-build
 # build production
-prd-build:
+prd-build: copy-config
 	go build -o ./bin/app -ldflags "-s -w -X main.Version=$(VERSION) -X main.Env=Production -X main.ConfFolderPath=$(YMAL_CONF_PATH)" ./cmd/server
 
 .PHONY: dev-build
 # build development
-dev-build:
+dev-build: copy-config
 	go build -o ./bin/app -ldflags "-s -w -X main.Version=$(VERSION) -X main.Env=Development -X main.ConfFolderPath=$(YMAL_CONF_PATH)" ./cmd/server
 
 .PHONY: all
