@@ -11,12 +11,16 @@ set "proto_file_directory=%~1"
 REM get all proto files
 call ./utils/search_files.bat %proto_file_directory% .proto file_list
 
-REM get the last folder and the prefix path
-for %%i in ("%proto_file_directory%") do (
-    set "last_folder=%%~nxi"
-    set "prefix_path=%%~dpi"
+REM set prefix path
+for %%d in (%~dp0..) do set prefix_path=%%~fd
+
+REM replace the prefix path to empty
+set modified_proto_file_directory=!proto_file_directory:%prefix_path%\=!
+
+REM get the first folder name
+for /f "tokens=1 delims=\" %%i in ("%modified_proto_file_directory%") do (
+  set first_folder=%%i
 )
-set "prefix_path=%prefix_path:~0,-1%"
 
 REM split whitespace of file_list and repalce relative path to empty of each file
 set "relative_file_paths="
@@ -31,6 +35,6 @@ for %%f in (%file_list%) do (
     )
 )
 
-protoc --proto_path=%last_folder% --proto_path=./third_party --go_out=paths=source_relative:%last_folder% --go-grpc_out=paths=source_relative:%last_folder% %relative_file_paths%
+protoc --proto_path=%first_folder% --proto_path=./third_party --go_out=paths=source_relative:%first_folder% --go-grpc_out=paths=source_relative:%first_folder% %relative_file_paths%
 
 endlocal
