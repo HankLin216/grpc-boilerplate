@@ -19,9 +19,9 @@ api:
 .PHONY: config
 # generate config proto
 config:
-	protoc --proto_path=internal/conf --proto_path=./third_party \
-	--go_out=paths=source_relative:internal/conf \
-	--go-grpc_out=paths=source_relative:internal/conf \
+	protoc --proto_path=internal --proto_path=./third_party \
+	--go_out=paths=source_relative:internal \
+	--go-grpc_out=paths=source_relative:internal \
 	$(CONF_PROTO_FILES)
 
 .PHONY: generate
