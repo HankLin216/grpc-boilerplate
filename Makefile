@@ -29,9 +29,9 @@ config:
 generate:
 	go generate ./...
 
-.PHONY: prd-build
+.PHONY: build
 # build production
-prd-build: copy-config
+build: copy-config
 	go build -o ./bin/app -ldflags "-s -w -X main.Version=$(VERSION) -X main.Env=Production -X main.ConfFolderPath=$(YMAL_CONF_PATH)" ./cmd/server
 
 .PHONY: dev-build
@@ -41,11 +41,21 @@ dev-build: copy-config
 
 .PHONY: all
 # generate all
-all: api config generate prd-build
+all: api config generate build
 
 .PHONY: dev-all
 # generate development all
 dev-all: api config generate dev-build
+
+.PHONY: dev-build-image
+# build development image
+dev-build-image:
+	docker build --build-arg ENVIRONMENT=Development -t grpc-boilerplate:$(VERSION)-dev -f Dockerfile .
+
+.PHONY: build-image
+# build production image
+build-image:
+	docker build --build-arg ENVIRONMENT=Production -t grpc-boilerplate:$(VERSION) -f Dockerfile .
 	
 .PHONY: help
 # show help

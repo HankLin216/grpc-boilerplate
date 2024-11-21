@@ -44,7 +44,12 @@
       "label": "Build Image (win)",
       "type": "shell",
       "command": "./utils/build_docker_image.bat",
-      "args": ["grpc-boilerplate", "${workspaceFolder}"]
+      "problemMatcher": [],
+      "args": [
+        "grpc-boilerplate",
+        "${input:buildTarget}",
+        "${workspaceFolder}\\Dockerfile"
+      ]
     }
   ],
   "inputs": [
