@@ -45,7 +45,7 @@ all: api config generate prd-build
 
 .PHONY: dev-all
 # generate development all
-all: api config generate dev-build
+dev-all: api config generate dev-build
 	
 .PHONY: help
 # show help
