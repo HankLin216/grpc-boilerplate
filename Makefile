@@ -6,6 +6,7 @@ YMAL_CONF_PATH=./config.yaml
 .PHONY: copy-config
 # copy config
 copy-config:
+	mkdir -p ./bin
 	cp ./configs/* ./bin/
 
 .PHONY: api
@@ -47,16 +48,26 @@ all: api config generate build
 # generate development all
 dev-all: api config generate dev-build
 
+.PHONY: build-image
+# build production image
+build-image:
+	docker build --build-arg ENVIRONMENT=Production -t grpc-boilerplate:$(VERSION) -f Dockerfile .
+
 .PHONY: dev-build-image
 # build development image
 dev-build-image:
 	docker build --build-arg ENVIRONMENT=Development -t grpc-boilerplate:$(VERSION)-dev -f Dockerfile .
 
-.PHONY: build-image
-# build production image
-build-image:
-	docker build --build-arg ENVIRONMENT=Production -t grpc-boilerplate:$(VERSION) -f Dockerfile .
-	
+.PHONY: run-image
+# run production image
+run-image:
+	docker run -d --rm --name grpc-boilerplate -p 9000:9000 grpc-boilerplate:$(VERSION)
+
+.PHONY: dev-run-image
+# run development image
+dev-run-image:
+	docker run -d --rm --name grpc-boilerplate-dev -p 9000:9000 grpc-boilerplate:$(VERSION)-dev
+
 .PHONY: help
 # show help
 help:

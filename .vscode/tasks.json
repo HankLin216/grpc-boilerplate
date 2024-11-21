@@ -50,6 +50,13 @@
         "${input:buildTarget}",
         "${workspaceFolder}\\Dockerfile"
       ]
+    },
+    {
+      "label": "Run Image (win)",
+      "type": "shell",
+      "command": "./utils/run_docker_image.bat",
+      "problemMatcher": [],
+      "args": ["grpc-boilerplate", "${input:buildTarget}"]
     }
   ],
   "inputs": [
