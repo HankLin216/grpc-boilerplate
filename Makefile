@@ -41,7 +41,11 @@ dev-build: copy-config
 
 .PHONY: all
 # generate all
-all: api config generate prd-build copy-config
+all: api config generate prd-build
+
+.PHONY: dev-all
+# generate development all
+all: api config generate dev-build
 	
 .PHONY: help
 # show help

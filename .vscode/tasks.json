@@ -39,6 +39,12 @@
       "command": "go",
       "problemMatcher": ["$go"],
       "args": ["generate", "./..."]
+    },
+    {
+      "label": "Build Image (win)",
+      "type": "shell",
+      "command": "./utils/build_docker_image.bat",
+      "args": ["grpc-boilerplate", "${workspaceFolder}"]
     }
   ],
   "inputs": [
@@ -51,7 +57,7 @@
     {
       "id": "buildTarget",
       "type": "pickString",
-      "options": ["Production", "Beta", "Development"],
+      "options": ["Production", "Development"],
       "description": "Select the build target",
       "default": "Production"
     }
