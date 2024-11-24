@@ -27,4 +27,7 @@ for %%i in ("%SCRIPT_DIR%..\") do set PARENT_DIR=%%~fi
 REM Execute the go build command
 go build -o %OUTPUT_FILE% -ldflags "-s -w -X main.Version=%GIT_TAG% -X main.Env=%ENVIRONMENT% -X main.ConfFolderPath=%CONFIG_FILE%" %PARENT_DIR%cmd\server
 
+REM Copy config to bin
+xcopy configs\* bin\ /Y
+
 endlocal
