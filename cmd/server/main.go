@@ -11,7 +11,9 @@ import (
 	"github.com/HankLin216/grpc-boilerplate/internal/conf"
 	app "github.com/HankLin216/grpc-boilerplate/pkg/app"
 	"github.com/HankLin216/grpc-boilerplate/pkg/transport/grpc"
+	"go.elastic.co/ecszap"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 var (
@@ -48,16 +50,13 @@ func main() {
 	flag.Parse()
 
 	// logger
-	var logger *zap.Logger
-	var err error
-	if Env == "Development" {
-		logger, err = zap.NewDevelopment()
-	} else {
-		logger, err = zap.NewProduction()
+	encoderConfig := ecszap.NewDefaultEncoderConfig()
+	enableLogLevel := zapcore.DebugLevel
+	if Env == "Production" {
+		enableLogLevel = zapcore.InfoLevel
 	}
-	if err != nil {
-		panic(err)
-	}
+	core := ecszap.NewCore(encoderConfig, os.Stdout, enableLogLevel)
+	logger := zap.New(core, zap.AddCaller())
 	defer logger.Sync()
 	logger.Info("Server infos",
 		zap.String("Name", Name),
