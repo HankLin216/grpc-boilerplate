@@ -1,0 +1,33 @@
+filebeat.inputs:
+- type: container
+  stream: stdout
+  paths: 
+    - '/var/lib/docker/containers/*/*.log'
+
+processors:
+- add_docker_metadata:
+    host: "unix:///var/run/docker.sock"
+
+- decode_json_fields:
+    fields: ["message"]
+    target: "json"
+    overwrite_keys: true
+
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  indices:
+    - index: "filebeat-elastic-%{[agent.version]}-%{+yyyy.MM.dd}"
+      when.or:
+        - equals:
+            container.name: filebeat
+        - equals:
+            container.name: elasticsearch
+        - equals:
+            container.name: kibana
+    - index: "filebeat-apps-%{[agent.version]}-%{+yyyy.MM.dd}"
+      when.or:
+        - equals:
+            container.name: grpc-boilerplate
+
+logging.json: true
+logging.metrics.enabled: false
