@@ -3,6 +3,14 @@ API_PROTO_FILES=$(shell find api -name "*.proto" -print0 | xargs -0 echo)
 CONF_PROTO_FILES=$(shell find internal/conf -name "*.proto" -print0 | xargs -0 echo)
 YMAL_CONF_PATH=./config.yaml
 
+.PHONY: install
+install:
+	sudo apt update && \
+	sudo apt install -y protobuf-compiler && \
+	sudo apt install -y golang && \
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && \
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
 .PHONY: copy-config
 # copy config
 copy-config:
