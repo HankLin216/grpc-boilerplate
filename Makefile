@@ -4,6 +4,7 @@ CONF_PROTO_FILES=$(shell find internal/conf -name "*.proto" -print0 | xargs -0 e
 YMAL_CONF_PATH=./config.yaml
 
 .PHONY: install
+# install golang, protoc and related tools
 install:
 	sudo apt update && \
 	sudo apt install -y protobuf-compiler && \
@@ -75,6 +76,16 @@ run-image:
 # run development image
 dev-run-image:
 	docker run -d --rm --name grpc-boilerplate-dev -p 9000:9000 grpc-boilerplate:$(VERSION)-dev
+
+.PHONY: docker-compose
+# run docker-compose
+docker-compose: build-image
+	VERSION=$(VERSION) docker-compose up -d
+
+.PHONY: dev-docker-compose
+# run development docker-compose
+dev-docker-compose: dev-build-image
+	VERSION=$(VERSION)-dev docker-compose up -d
 
 .PHONY: help
 # show help
