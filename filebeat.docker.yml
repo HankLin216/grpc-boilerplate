@@ -1,17 +1,35 @@
-filebeat.inputs:
-  - type: container
-    stream: stdout
-    paths:
-      - "/var/lib/docker/containers/*/*.log"
-    json.keys_under_root: true
-    json.add_error_key: true
-    json.overwrite_keys: true
-    json.expand_keys: true
+# filebeat.inputs:
+#   - type: container
+#     stream: stdout
+#     paths:
+#       - "/var/lib/docker/containers/*/*.log"
+#     json.keys_under_root: true
+#     json.add_error_key: true
+#     json.overwrite_keys: true
+#     json.expand_keys: true
 
 filebeat.autodiscover:
   providers:
     - type: docker
-      hints.enabled: true
+      templates:
+        - condition:
+            equals:
+              docker.container.name: "grpc-boilerplate"
+          config:
+            - type: container
+              paths:
+                - "/var/lib/docker/containers/*/${data.docker.container.id}-json.log"
+              processors:
+                - add_tags:
+                    tags: [json]
+                    target: "parser_type"
+                - decode_json_fields:
+                    fields:
+                      - message
+                    target: ""
+                    overwrite_keys: true
+                    add_error_key: true
+                    expand_keys: true
 
 processors:
   - add_docker_metadata: ~
@@ -20,15 +38,15 @@ processors:
 output.elasticsearch:
   hosts: ["elasticsearch:9200"]
   indices:
-    - index: "elastic-%{+yyyy.MM.dd}"
-      when.or:
-        - equals:
-            container.name: filebeat
-        - equals:
-            container.name: elasticsearch
-        - equals:
-            container.name: kibana
-    - index: "apps-%{+yyyy.MM.dd}"
+    # - index: "elastic-%{+yyyy.MM.dd}"
+    #   when.or:
+    #     - equals:
+    #         container.name: filebeat
+    #     - equals:
+    #         container.name: elasticsearch
+    #     - equals:
+    #         container.name: kibana
+    - index: "grpc-%{+yyyy.MM.dd}"
       when.or:
         - equals:
             container.name: grpc-boilerplate
