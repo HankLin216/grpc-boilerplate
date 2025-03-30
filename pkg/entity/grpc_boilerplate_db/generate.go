@@ -1,3 +1,3 @@
-package ent
+package grpc_boilerplate_db
 
 //go:generate go run -mod=mod entgo.io/ent/cmd/ent generate ./schema

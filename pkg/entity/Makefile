@@ -12,9 +12,9 @@ generate:
 # migrate diff
 migrate-diff:
 	@if [ -z "$(name)" ]; then echo "Error: Please provide a migration name (e.g., make migrate-diff name=add_user)"; exit 1; fi
-	atlas migrate diff add_user \
+	atlas migrate diff $(name) \
 	--dir "file://grpc_boilerplate_db/migrate/migrations" \
-	--to "ent://ent/schema" \
+	--to "ent://grpc_boilerplate_db/schema" \
 	--dev-url "docker://postgres/15/test?search_path=public"
 
 .PHONY: help
