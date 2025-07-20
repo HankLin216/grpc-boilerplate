@@ -50,13 +50,14 @@ func main() {
 	flag.Parse()
 
 	// logger
-	encoderConfig := ecszap.NewDefaultEncoderConfig()
-	enableLogLevel := zapcore.DebugLevel
+	logLevel := zapcore.DebugLevel
 	if Env == "Production" {
-		enableLogLevel = zapcore.InfoLevel
+		logLevel = zapcore.InfoLevel
 	}
-	core := ecszap.NewCore(encoderConfig, os.Stdout, enableLogLevel)
-	logger := zap.New(core, zap.AddCaller())
+	logger := zap.New(
+		ecszap.NewCore(ecszap.NewDefaultEncoderConfig(), os.Stdout, logLevel),
+		zap.AddCaller(),
+	)
 	defer logger.Sync()
 	logger.Info("Server infos",
 		zap.String("Name", Name),
