@@ -2,13 +2,6 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Search Proto Files (win)",
-      "type": "shell",
-      "command": "./utils/search_files.bat",
-      "args": ["${workspaceFolder}\\api", ".proto"],
-      "problemMatcher": []
-    },
-    {
       "label": "Generate API Proto Files (win)",
       "type": "shell",
       "command": "./utils/generate_proto.bat",

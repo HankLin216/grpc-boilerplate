@@ -3,38 +3,36 @@ setlocal enabledelayedexpansion
 
 if "%~1"=="" (
     echo Usage: %~nx0 [proto_file_directory]
+    echo Example: %~nx0 api
+    echo Example: %~nx0 internal
     exit /b 1
 )
 
 set "proto_file_directory=%~1"
 
-REM get all proto files
-call ./utils/search_files.bat %proto_file_directory% .proto file_list
+REM Check if the directory exists
+if not exist "%proto_file_directory%" (
+    echo Error: Directory "%proto_file_directory%" does not exist
+    exit /b 1
+)
 
-REM set prefix path
+REM set prefix path for relative path calculation
 for %%d in (%~dp0..) do set prefix_path=%%~fd
 
-REM replace the prefix path to empty
+REM replace the prefix path to get relative directory
 set modified_proto_file_directory=!proto_file_directory:%prefix_path%\=!
 
-REM get the first folder name
-for /f "tokens=1 delims=\" %%i in ("%modified_proto_file_directory%") do (
-  set first_folder=%%i
+echo Generating proto files for directory: %proto_file_directory%
+echo Using buf generate with --path filter...
+
+REM Use buf generate with --path to generate only the specified directory
+buf generate --path %modified_proto_file_directory%
+
+if %ERRORLEVEL% NEQ 0 (
+    echo Error: Failed to generate proto files for %proto_file_directory%
+    exit /b 1
+) else (
+    echo Successfully generated proto files for %proto_file_directory%
 )
-
-REM split whitespace of file_list and repalce relative path to empty of each file
-set "relative_file_paths="
-for %%f in (%file_list%) do (
-    set "file=%%f"
-    set "file=!file:%prefix_path%\=!"
-
-    if "!relative_file_paths!"=="" (
-        set "relative_file_paths=!file!"
-    ) else (
-        set "relative_file_paths=!relative_file_paths! !file!"
-    )
-)
-
-protoc --proto_path=%first_folder% --proto_path=./third_party --go_out=paths=source_relative:%first_folder% --go-grpc_out=paths=source_relative:%first_folder% %relative_file_paths%
 
 endlocal

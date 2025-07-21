@@ -1,16 +1,31 @@
 VERSION=$(shell git describe --tags --always)
-API_PROTO_FILES=$(shell find api -name "*.proto" -print0 | xargs -0 echo)
-CONF_PROTO_FILES=$(shell find internal/conf -name "*.proto" -print0 | xargs -0 echo)
 YMAL_CONF_PATH=./config.yaml
 
 .PHONY: install
-# install golang, protoc and related tools
+# install golang, buf and related tools
 install:
 	sudo apt update && \
-	sudo apt install -y protobuf-compiler && \
-	sudo apt install -y golang && \
+	sudo apt remove -y golang golang-go golang-src && \
+	wget -O- https://golang.org/dl/go1.23.2.linux-amd64.tar.gz | sudo tar -C /usr/local -xzf - && \
+	echo 'export PATH="/usr/local/go/bin:$$HOME/go/bin:$$PATH"' >> ~/.bashrc && \
+	curl -sSL "https://github.com/bufbuild/buf/releases/latest/download/buf-Linux-x86_64" -o "/tmp/buf" && \
+	sudo mv "/tmp/buf" "/usr/local/bin/buf" && \
+	sudo chmod +x "/usr/local/bin/buf" && \
+	export PATH="/usr/local/go/bin:$$HOME/go/bin:$$PATH" && \
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && \
-	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest && \
+	go version && buf --version && \
+	echo "Please run 'source ~/.bashrc' or start a new shell session to update your PATH"
+
+.PHONY: check-env
+# check if required tools are available
+check-env:
+	@echo "Checking required tools..."
+	@which go > /dev/null || (echo "❌ go not found in PATH" && exit 1)
+	@which buf > /dev/null || (echo "❌ buf not found in PATH" && exit 1)
+	@which protoc-gen-go > /dev/null || (echo "❌ protoc-gen-go not found in PATH" && exit 1)
+	@which protoc-gen-go-grpc > /dev/null || (echo "❌ protoc-gen-go-grpc not found in PATH" && exit 1)
+	@echo "✅ All required tools are available"
 
 .PHONY: copy-config
 # copy config
@@ -21,22 +36,23 @@ copy-config:
 .PHONY: api
 # generate api proto
 api:
-	protoc --proto_path=api --proto_path=./third_party \
-	--go_out=paths=source_relative:api \
-	--go-grpc_out=paths=source_relative:api \
-	$(API_PROTO_FILES)
+	@echo "Generating API proto files..."
+	@buf generate --path api
 
 .PHONY: config
 # generate config proto
 config:
-	protoc --proto_path=internal --proto_path=./third_party \
-	--go_out=paths=source_relative:internal \
-	--go-grpc_out=paths=source_relative:internal \
-	$(CONF_PROTO_FILES)
+	@echo "Generating config proto files..."
+	@buf generate --path internal
+
+.PHONY: tidy
+# tidy go modules
+tidy:
+	go mod tidy
 
 .PHONY: generate
 # generate wire
-generate:
+generate: tidy
 	go generate ./...
 
 .PHONY: build
